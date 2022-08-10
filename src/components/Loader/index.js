@@ -3,6 +3,7 @@ import React from 'react';
 import { Typography } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 
+// Styles
 import './style.scss';
 
 const { Title } = Typography;

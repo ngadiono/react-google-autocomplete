@@ -1,9 +1,13 @@
 // Vendors
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { List, Input } from 'antd';
 
 // Hooks
-import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete';
+import usePlacesAutocomplete, { getGeocode, getLatLng, getDetails } from 'use-places-autocomplete';
+
+// Redux actions
+import { placeList, placeDetail } from 'reducers/placesSlice';
 
 // Styles
 import './style.scss';
@@ -17,22 +21,39 @@ const PlacesAutocomplete = ({ setSelected }) => {
     clearSuggestions,
   } = usePlacesAutocomplete();
 
+  const places = useSelector((state) => state.places.list);
+  const detail = useSelector((state) => state.places.detail);
+  const dispatch = useDispatch();
+
   const handleSearch = (e) => {
     let searchText = e.target.value;
     setValue(searchText);
     // if (searchText === '') {
-    //   console.log('peta membesar')
+    //   dispatch(placeList([]));
     // }
   };
 
   const handleSelect = async (address) => {
-    setValue(address, false);
+    setValue(address.description, false);
     clearSuggestions();
 
-    const results = await getGeocode({ address });
+    // Store detail of place
+    getDetails({ placeId: address.place_id })
+      .then((details) => {
+        dispatch(placeDetail(details));
+      })
+      .catch((error) => {
+        console.log('Error: ', error);
+      });
+
+    const results = await getGeocode({ address: address.description });
     const { lat, lng } = await getLatLng(results[0]);
     setSelected({ lat, lng });
   };
+
+  useEffect(() => {
+    dispatch(placeList(data));
+  }, [data]);
 
   return (
     <>
@@ -47,10 +68,8 @@ const PlacesAutocomplete = ({ setSelected }) => {
         <List
           size="small"
           bordered
-          dataSource={data}
-          renderItem={(item) => (
-            <List.Item onClick={() => handleSelect(item.description)}>{item.description}</List.Item>
-          )}
+          dataSource={places}
+          renderItem={(item) => <List.Item onClick={() => handleSelect(item)}>{item.description}</List.Item>}
         />
       )}
     </>
