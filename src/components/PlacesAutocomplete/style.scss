@@ -1,0 +1,8 @@
+.ant-list-item {
+    background-color: white;
+    user-select: none;
+    cursor: pointer;
+    &:hover {
+        background-color: #edebeb;
+    }
+}
