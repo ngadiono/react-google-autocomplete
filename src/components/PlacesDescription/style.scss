@@ -7,6 +7,11 @@
     background-color: white;
     cursor: default !important;
 }
+@media only screen and (max-width: 600px) {
+    .wrapper-place-description {
+        display: none;
+    }
+  }
 .additional-desc {
     margin-top: 20px;
 }
