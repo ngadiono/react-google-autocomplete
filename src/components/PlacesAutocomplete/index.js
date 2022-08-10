@@ -28,9 +28,6 @@ const PlacesAutocomplete = ({ setSelected }) => {
   const handleSearch = (e) => {
     let searchText = e.target.value;
     setValue(searchText);
-    // if (searchText === '') {
-    //   dispatch(placeList([]));
-    // }
   };
 
   const handleSelect = async (address) => {
